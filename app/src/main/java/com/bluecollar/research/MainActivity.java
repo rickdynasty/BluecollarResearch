@@ -1,5 +1,6 @@
 package com.bluecollar.research;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -11,34 +12,23 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.bluecollar.lib.net.OkHttp3Utils;
 
+import java.lang.ref.WeakReference;
+
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
-    private final String TAG = MainActivity.class.getSimpleName();
-    private Handler handler;
+    private static final String TAG = MainActivity.class.getSimpleName();
+    private MyHandler handler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        handler = new MyHandler(this);
+
         setContentView(R.layout.activity_main);
 
         findViewById(R.id.get_baidu).setOnClickListener(this);
         findViewById(R.id.get_weather).setOnClickListener(this);
-        init();
     }
 
-    private void init() {
-        // Looper.prepare();
-        handler = new Handler() {
-
-            @Override
-            public void handleMessage(Message msg) {
-                super.handleMessage(msg);
-                String str = msg.obj.toString();
-                Log.d(TAG, str);
-                Toast.makeText(MainActivity.this, str, Toast.LENGTH_SHORT).show();
-            }
-        };
-        //  Looper.loop();
-    }
 
     @Override
     public void onClick(View view) {
@@ -69,5 +59,28 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         String apiKey = "1a962774982540bfaf043648e745bf6d";
         String userId = "585719";
         return OkHttp3Utils.getSync("www.baidu.com");
+    }
+
+    private static class MyHandler extends Handler {
+        private final WeakReference<Activity> mActivity;
+
+        public MyHandler(Activity activity) {
+            mActivity = new WeakReference<Activity>(activity);
+        }
+
+        @Override
+        public void handleMessage(Message msg) {
+            Activity activity = mActivity.get();
+            if (null == activity)
+                return;
+
+            if (null != msg.obj) {
+                String str = msg.obj.toString();
+                Log.d(TAG, str);
+                Toast.makeText(activity, str, Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(activity, "str is null", Toast.LENGTH_SHORT).show();
+            }
+        }
     }
 }

@@ -2,6 +2,7 @@ package com.bluecollar.lib.net;
 
 import java.io.IOException;
 
+import okhttp3.Callback;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -22,6 +23,9 @@ public final class OkHttp3Utils {
         return "";
     }
 
+    /**
+     * post 同步请求
+     */
     public static String postSync(String url, String body) {  //body为参数列表
         String s = "";
         OkHttpClient client = new OkHttpClient();
@@ -35,5 +39,24 @@ public final class OkHttp3Utils {
             e.printStackTrace();
         }
         return s;
+    }
+
+    /**
+     * post 异步请求
+     */
+    public static void postAsync(String url, String body, Callback callback) {
+        OkHttpClient client = new OkHttpClient();
+        RequestBody requestBody = RequestBody.create(MediaType.parse("application/x-www-form-urlencoded"), body);
+        Request request = new Request.Builder().url(url).post(requestBody).build();
+        client.newCall(request).enqueue(callback);
+    }
+
+    /**
+     * get 异步请求
+     */
+    public static void getAsync(String url, Callback callback) {
+        OkHttpClient client = new OkHttpClient();
+        Request request = new Request.Builder().url(url).build();
+        client.newCall(request).enqueue(callback);
     }
 }
