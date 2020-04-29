@@ -1,0 +1,21 @@
+apply plugin: 'groovy'
+apply plugin: 'maven'
+
+dependencies {
+    implementation gradleApi()
+    implementation localGroovy()
+
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+}
+
+uploadArchives {
+    repositories {
+        mavenDeployer {
+            //本地的maven地址
+            repository(url:'file:///D:\\maven')
+        }
+    }
+}
+
+group='com.bluecollar.plugin'
+version='1.0.0'
