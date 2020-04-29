@@ -12,7 +12,12 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.bluecollar.lib.net.OkHttp3Utils;
 
+import java.io.IOException;
 import java.lang.ref.WeakReference;
+
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.Response;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
     private static final String TAG = MainActivity.class.getSimpleName();
@@ -26,7 +31,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.activity_main);
 
         findViewById(R.id.get_baidu).setOnClickListener(this);
-        findViewById(R.id.get_weather).setOnClickListener(this);
+        findViewById(R.id.get_baidu_async).setOnClickListener(this);
     }
 
 
@@ -36,11 +41,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.get_baidu:
                 getBaidu();
                 break;
-            case R.id.get_weather:
+            case R.id.get_baidu_async:
+                getBaiduAsync();
                 break;
         }
     }
 
+    // 同步获取需要开线程，否则会异常[防止阻塞主线程]
     private void getBaidu() {
         new Thread(new Runnable() {
             @Override
@@ -54,11 +61,24 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }).start();
     }
 
-    private String getTodayWeather() {
-        String apiurl = "http://openapi.tuling123.com/openapi/api/v2";
-        String apiKey = "1a962774982540bfaf043648e745bf6d";
-        String userId = "585719";
-        return OkHttp3Utils.getSync("www.baidu.com");
+    // 异步获取数据不需要开线程
+    private void getBaiduAsync() {
+        OkHttp3Utils.getAsync("https://www.baidu.com", new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                Message message = handler.obtainMessage();
+                message.obj = "获取百度数据失败";
+                handler.sendMessage(message);
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                Message message = handler.obtainMessage();
+                message.obj = response.body().string();
+                ;
+                handler.sendMessage(message);
+            }
+        });
     }
 
     private static class MyHandler extends Handler {

@@ -13,17 +13,17 @@
         android:id="@+id/get_baidu"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="访问百度"
+        android:text="同步访问Baidu"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
-        android:id="@+id/get_weather"
+        android:id="@+id/get_baidu_async"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="获取天气"
+        android:text="异步访问Baidu"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
