@@ -1,0 +1,15 @@
+ext {
+    versionName = "1.0.0"
+    versionCode = 100
+
+    minSdkVersion = 19
+    targetSdkVersion = 26
+    compileSdkVersion = 27
+    buildToolsVersion = '27.0.3'
+
+    LIB_SUPPORT_APPCOMPAT = 'com.android.support:appcompat-v7:27.1.1'
+    LIB_OKHTTP3 = 'com.squareup.okhttp3:okhttp:3.8.1'
+    LIB_GSON = 'com.google.code.gson:gson:2.8.2'
+
+    LIB_NET = 'com.bluecollar.lib:net:1.0.0'
+}
